@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Candidates | JobMatch Admin{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ url_for('recruiter_dashboard') }}" style="color: var(--text-secondary); text-decoration: none;">&larr; Back to Dashboard</a>
+        <h1 style="margin-top: 1rem;">Candidate <span>Database</span></h1>
+    </div>
+
+    <!-- Candidate Search Controls -->
+    <div class="glass-card" style="padding: 1.25rem; margin-bottom: 2rem; display: flex; gap: 1rem; align-items: center; background: rgba(255, 255, 255, 0.02);">
+        <div style="flex: 1; position: relative;">
+            <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary);"></i>
+            <input type="text" id="candidateSearchInput" placeholder="Search candidates by name, email, or skills..." style="padding-left: 2.75rem; width: 100%; height: 45px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 8px; color: white; outline: none; transition: 0.3s;">
+        </div>
+    </div>
+
+    <div class="job-grid">
+        {% for candidate in candidates %}
+        <div class="glass-card job-card candidate-card" style="padding: 1.5rem;"
+             data-name="{{ (candidate.profile.full_name or 'anonymous user')|lower }}"
+             data-email="{{ candidate.email|lower }}"
+             data-skills="{{ (candidate.profile.skills or '')|lower }}">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                <div>
+                    <a href="{{ url_for('recruiter_candidate_profile', user_id=candidate.id) }}" style="text-decoration: none;">
+                        <h3 style="color: var(--primary); transition: 0.3s;" onmouseover="this.style.color='var(--secondary)'" onmouseout="this.style.color='var(--primary)'">{{ candidate.profile.full_name or 'Anonymous User' }}</h3>
+                    </a>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">{{ candidate.email }}</p>
+                </div>
+                <div style="text-align: right;">
+                    <span class="badge" style="background: rgba(99, 102, 241, 0.1); color: var(--primary); font-size: 0.75rem;">Candidate</span>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;"><strong>Skills:</strong></p>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    {% if candidate.profile.skills %}
+                        {% for skill in candidate.profile.skills.split(',') %}
+                        <span class="badge badge-match" style="font-size: 0.7rem; border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-primary);">{{ skill.strip() }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span style="font-size: 0.85rem; font-style: italic; color: var(--text-secondary);">No skills listed</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid var(--glass-border); padding-top: 1rem; margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <p style="font-size: 0.8rem; color: var(--text-secondary);">Member since: {{ candidate.email.split('@')[0] }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('candidateSearchInput');
+    const cards = Array.from(document.querySelectorAll('.candidate-card'));
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const query = searchInput.value.toLowerCase().trim();
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name') || '';
+                const email = card.getAttribute('data-email') || '';
+                const skills = card.getAttribute('data-skills') || '';
+
+                if (!query || name.includes(query) || email.includes(query) || skills.includes(query)) {
+                    card.style.display = 'block';
+                    card.style.opacity = '1';
+                } else {
+                    card.style.display = 'none';
+                    card.style.opacity = '0';
+                }
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Candidate Profile | JobMatch Admin{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ url_for('admin_candidates') }}" style="color: var(--text-secondary); text-decoration: none;">&larr; Back to Candidates</a>
+        <h1 style="margin-top: 1rem;">Candidate <span>Profile</span></h1>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; margin-bottom: 2rem;">
+        <div class="glass-card" style="padding: 2rem; height: fit-content;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; font-size: 2.5rem; color: white; font-weight: 700;">
+                    {{ (candidate.profile.full_name or 'A')[0].upper() }}
+                </div>
+                <h2 style="color: var(--text-primary); margin-bottom: 0.5rem;">{{ candidate.profile.full_name or 'Anonymous User' }}</h2>
+                <p style="color: var(--text-secondary);">{{ candidate.email }}</p>
+                {% if candidate.profile.location %}
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                    <i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>{{ candidate.profile.location }}
+                </p>
+                {% endif %}
+            </div>
+
+            <div style="border-top: 1px solid var(--glass-border); padding-top: 1.5rem;">
+                <h4 style="color: var(--primary); margin-bottom: 1rem;">Skills</h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    {% if candidate.profile.skills %}
+                        {% for skill in candidate.profile.skills.split(',') %}
+                        <span class="badge badge-match" style="font-size: 0.8rem; border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: var(--text-primary);">{{ skill.strip() }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <p style="font-size: 0.9rem; font-style: italic; color: var(--text-secondary);">No skills listed.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if candidate.profile.resume_path %}
+            <div style="border-top: 1px solid var(--glass-border); padding-top: 1.5rem; margin-top: 1.5rem;">
+                <h4 style="color: var(--primary); margin-bottom: 1rem;">Resume</h4>
+                <a href="{{ url_for('recruiter_view_resume', user_id=candidate.id) }}" target="_blank" class="btn" style="display: block; text-align: center; background: rgba(99, 102, 241, 0.1); color: var(--primary); border: 1px solid var(--primary);">Open PDF in New Tab</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <div>
+            <div class="glass-card" style="padding: 2rem; margin-bottom: 2rem;">
+                <h3 style="color: var(--primary); margin-bottom: 1rem;">About</h3>
+                {% if candidate.profile.bio %}
+                    <p style="color: var(--text-secondary); line-height: 1.6;">{{ candidate.profile.bio }}</p>
+                {% else %}
+                    <p style="font-style: italic; color: var(--text-secondary);">No bio provided.</p>
+                {% endif %}
+
+                <h3 style="color: var(--primary); margin-bottom: 1rem; margin-top: 2rem;">Experience</h3>
+                {% if candidate.profile.experience %}
+                    <p style="color: var(--text-secondary); line-height: 1.6;">{{ candidate.profile.experience }}</p>
+                {% else %}
+                    <p style="font-style: italic; color: var(--text-secondary);">No experience detailed.</p>
+                {% endif %}
+                
+                <h3 style="color: var(--primary); margin-bottom: 1rem; margin-top: 2rem;">Education</h3>
+                {% if candidate.profile.education %}
+                    <p style="color: var(--text-secondary); line-height: 1.6;">{{ candidate.profile.education }}</p>
+                {% else %}
+                    <p style="font-style: italic; color: var(--text-secondary);">No education details provided.</p>
+                {% endif %}
+            </div>
+
+            <h3 style="margin-bottom: 1rem;">Application <span>History</span></h3>
+            {% if applications %}
+            <div class="glass-card" style="padding: 0;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="background: rgba(255,255,255,0.05); border-bottom: 1px solid var(--glass-border);">
+                            <th style="padding: 1.5rem;">Job Applied</th>
+                            <th style="padding: 1.5rem;">Match Score</th>
+                            <th style="padding: 1.5rem;">Date Applied</th>
+                            <th style="padding: 1.5rem;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr style="border-bottom: 1px solid var(--glass-border); transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                            <td style="padding: 1.25rem;">
+                                <span style="display: block; font-weight: 500;">{{ app.job.title }}</span>
+                                <span style="font-size: 0.8rem; color: var(--text-secondary);">{{ app.job.company }}</span>
+                            </td>
+                            <td style="padding: 1.25rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div style="width: 80px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                                        <div style="width: {{ app.match_score }}%; height: 100%; background: linear-gradient(to right, var(--primary), var(--secondary));"></div>
+                                    </div>
+                                    <span style="font-weight: 700; font-size: 0.9rem; color: var(--text-primary);">{{ app.match_score }}%</span>
+                                </div>
+                            </td>
+                            <td style="padding: 1.25rem; font-size: 0.9rem; color: var(--text-secondary);">
+                                {{ app.applied_at.strftime('%Y-%m-%d') }}
+                            </td>
+                            <td style="padding: 1.25rem;">
+                                <span class="badge" style="
+                                    {% if app.status == 'Applied' or app.status == 'applied' %}background: rgba(99, 102, 241, 0.1); color: var(--primary);
+                                    {% elif app.status == 'Selected' or app.status == 'Shortlisted' %}background: rgba(16, 185, 129, 0.1); color: var(--accent-success);
+                                    {% elif app.status == 'Interview' or app.status == 'Interviewing' or app.status == 'interview' %}background: rgba(245, 158, 11, 0.1); color: var(--accent-warning);
+                                    {% elif app.status == 'Rejected' or app.status == 'rejected' %}background: rgba(239, 68, 68, 0.1); color: #ef4444;
+                                    {% endif %}
+                                ">
+                                    {{ app.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="glass-card" style="padding: 2rem; text-align: center;">
+                <p style="color: var(--text-secondary); margin: 0;">No applications found.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

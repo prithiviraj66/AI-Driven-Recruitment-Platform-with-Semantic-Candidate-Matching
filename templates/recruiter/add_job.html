@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 800px;">
+    <h1 style="margin-bottom: 2rem;">Post a <span>New Job Opening</span></h1>
+    
+    <div class="glass-card">
+        <form method="POST">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="form-group">
+                    <label>Job Title</label>
+                    <input type="text" name="title" required placeholder="Software Engineer">
+                </div>
+                <div class="form-group">
+                    <label>Company Name</label>
+                    <input type="text" name="company" required placeholder="Big Tech Corp">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" name="location" placeholder="Remote / City, State">
+                </div>
+                <div class="form-group">
+                    <label>Salary (Approximate)</label>
+                    <input type="text" name="salary" placeholder="$100k - $150k">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+                <div class="form-group">
+                    <label>Job Category / Type</label>
+                    <select name="job_type" required>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Contract">Contract</option>
+                        <option value="Internship">Internship</option>
+                        <option value="Remote">Remote</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Experience Level</label>
+                    <select name="experience_level" required>
+                        <option value="Entry-level">Entry-level</option>
+                        <option value="Junior">Junior</option>
+                        <option value="Mid-level">Mid-level</option>
+                        <option value="Senior">Senior</option>
+                        <option value="Lead">Lead</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Number of Vacancies</label>
+                    <input type="number" name="vacancies" min="1" value="1" required style="width: 100%; height: 45px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 8px; color: white; padding: 0.5rem 1rem; outline: none; transition: 0.3s;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Job Description</label>
+                <textarea name="description" rows="6" required placeholder="Describe the role, responsibilities, and requirements..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Required Skills (Comma-separated)</label>
+                <input type="text" name="skills_required" required placeholder="Python, Java, React, SQL">
+                <small style="color: var(--text-secondary);">These skills are used to match with candidate profiles.</small>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="flex: 1; padding: 1rem; font-size: 1.1rem;">Post Job</button>
+                <a href="{{ url_for('dashboard') }}" class="btn" style="border: 1px solid var(--glass-border); padding: 1rem;">Back to Dashboard</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

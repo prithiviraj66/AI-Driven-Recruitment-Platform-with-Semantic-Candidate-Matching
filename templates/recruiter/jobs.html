@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Jobs | JobMatch Admin{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1000px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1>Manage <span>Jobs</span></h1>
+        <a href="{{ url_for('recruiter_add_job') }}" class="btn btn-primary">+ Post New Job</a>
+    </div>
+
+    <!-- 1. Open Positions Section -->
+    <h3 style="margin-bottom: 1rem; color: var(--primary);">Open Positions</h3>
+    <div class="glass-card" style="padding: 0; margin-bottom: 3rem; border: 1px solid var(--glass-border);">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--glass-border);">
+                    <th style="padding: 1.5rem;">Job Title</th>
+                    <th style="padding: 1.5rem;">Vacancies</th>
+                    <th style="padding: 1.5rem;">Location</th>
+                    <th style="padding: 1.5rem;">Status</th>
+                    <th style="padding: 1.5rem; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set ns_open = namespace(count=0) %}
+                {% for job in jobs %}
+                    {% if not job.is_filled %}
+                        {% set ns_open.count = ns_open.count + 1 %}
+                        <tr style="border-bottom: 1px solid var(--glass-border); transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.01)'" onmouseout="this.style.background='transparent'">
+                            <td style="padding: 1.25rem;">
+                                <span style="display: block; font-weight: 600;">{{ job.title }}</span>
+                                <span style="font-size: 0.8rem; color: var(--text-secondary);">Posted on {{ job.posted_at.strftime('%Y-%m-%d') }}</span>
+                            </td>
+                            <td style="padding: 1.25rem; color: var(--text-secondary);">{{ job.vacancies }}</td>
+                            <td style="padding: 1.25rem; color: var(--text-secondary);">{{ job.location }}</td>
+                            <td style="padding: 1.25rem;">
+                                {% if job.is_active %}
+                                <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-success); border: 1px solid var(--accent-success);">Active</span>
+                                {% else %}
+                                <span class="badge" style="background: rgba(245, 158, 11, 0.1); color: var(--accent-warning); border: 1px solid var(--accent-warning);">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 1.25rem; text-align: right;">
+                                <a href="{{ url_for('recruiter_edit_job', job_id=job.id) }}" style="color: var(--primary); text-decoration: none; margin-right: 1rem; font-weight: 500;">Edit</a>
+                                <a href="{{ url_for('recruiter_delete_job', job_id=job.id) }}" style="color: #ef4444; text-decoration: none; font-weight: 500;" onclick="return confirm('Are you sure you want to delete this job?')">Delete</a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                {% if ns_open.count == 0 %}
+                <tr>
+                    <td colspan="5" style="padding: 3rem; text-align: center; color: var(--text-secondary);">
+                        No active open positions found.
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 2. Filled / Closed Positions Section -->
+    <h3 style="margin-bottom: 1rem; color: var(--text-secondary);">Filled / Closed Positions</h3>
+    <div class="glass-card" style="padding: 0; border: 1px solid var(--glass-border);">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--glass-border);">
+                    <th style="padding: 1.5rem;">Job Title</th>
+                    <th style="padding: 1.5rem;">Vacancies Limit</th>
+                    <th style="padding: 1.5rem;">Location</th>
+                    <th style="padding: 1.5rem;">Status</th>
+                    <th style="padding: 1.5rem; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set ns_filled = namespace(count=0) %}
+                {% for job in jobs %}
+                    {% if job.is_filled %}
+                        {% set ns_filled.count = ns_filled.count + 1 %}
+                        <tr style="border-bottom: 1px solid var(--glass-border); transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.01)'" onmouseout="this.style.background='transparent'">
+                            <td style="padding: 1.25rem;">
+                                <span style="display: block; font-weight: 600;">{{ job.title }}</span>
+                                <span style="font-size: 0.8rem; color: var(--text-secondary);">Posted on {{ job.posted_at.strftime('%Y-%m-%d') }}</span>
+                            </td>
+                            <td style="padding: 1.25rem; color: var(--text-secondary);">{{ job.vacancies }} (Filled)</td>
+                            <td style="padding: 1.25rem; color: var(--text-secondary);">{{ job.location }}</td>
+                            <td style="padding: 1.25rem;">
+                                <span class="badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444;">Filled</span>
+                            </td>
+                            <td style="padding: 1.25rem; text-align: right;">
+                                <a href="{{ url_for('recruiter_edit_job', job_id=job.id) }}" style="color: var(--primary); text-decoration: none; margin-right: 1rem; font-weight: 500;">Edit</a>
+                                <a href="{{ url_for('recruiter_delete_job', job_id=job.id) }}" style="color: #ef4444; text-decoration: none; font-weight: 500;" onclick="return confirm('Are you sure you want to delete this job?')">Delete</a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                {% if ns_filled.count == 0 %}
+                <tr>
+                    <td colspan="5" style="padding: 3rem; text-align: center; color: var(--text-secondary);">
+                        No filled or closed positions.
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

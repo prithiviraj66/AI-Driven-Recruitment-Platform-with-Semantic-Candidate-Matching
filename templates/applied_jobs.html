@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Applied Jobs | JobMatch{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px;">
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ url_for('dashboard') }}" style="color: var(--text-secondary); text-decoration: none;">&larr; Back to Dashboard</a>
+        <h1 style="margin-top: 1rem;">My <span>Applied Jobs</span></h1>
+        <p style="color: var(--text-secondary); margin-top: 0.25rem;">Track the status and history of all your job applications.</p>
+    </div>
+
+    {% if applications %}
+    <div class="glass-card" style="padding: 0;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: rgba(255,255,255,0.05); border-bottom: 1px solid var(--glass-border);">
+                    <th style="padding: 1.5rem;">Job Title</th>
+                    <th style="padding: 1.5rem;">Company</th>
+                    <th style="padding: 1.5rem;">Applied On</th>
+                    <th style="padding: 1.5rem;">Status</th>
+                    <th style="padding: 1.5rem; text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                <tr style="border-bottom: 1px solid var(--glass-border); transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                    <td style="padding: 1.25rem;">
+                        <span style="display: block; font-weight: 600;">{{ app.job.title }}</span>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">{{ app.job.location }} &bull; {{ app.job.job_type }}</span>
+                    </td>
+                    <td style="padding: 1.25rem; font-weight: 500; color: var(--text-primary);">
+                        {{ app.job.company }}
+                    </td>
+                    <td style="padding: 1.25rem; color: var(--text-secondary); font-size: 0.9rem;">
+                        {{ app.applied_at.strftime('%b %d, %Y') }}
+                    </td>
+                    <td style="padding: 1.25rem;">
+                        <span class="badge" style="
+                            {% if app.status == 'Applied' or app.status == 'applied' %}background: rgba(99, 102, 241, 0.1); color: var(--primary); border: 1px solid var(--primary);
+                            {% elif app.status == 'Selected' or app.status == 'Shortlisted' or app.status == 'Appointed' %}background: rgba(16, 185, 129, 0.1); color: var(--accent-success); border: 1px solid var(--accent-success);
+                            {% elif app.status == 'Interview' or app.status == 'Interviewing' or app.status == 'interview' %}background: rgba(245, 158, 11, 0.1); color: var(--accent-warning); border: 1px solid var(--accent-warning);
+                            {% elif app.status == 'Rejected' or app.status == 'rejected' %}background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444;
+                            {% endif %}
+                        ">
+                            {{ app.status }}
+                        </span>
+                    </td>
+                    <td style="padding: 1.25rem; text-align: right;">
+                        <a href="{{ url_for('job_detail', job_id=app.job.id) }}" class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; border: 1px solid var(--glass-border); text-decoration: none; display: inline-block;">View Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="glass-card" style="padding: 3rem; text-align: center;">
+        <i class="fas fa-folder-open" style="font-size: 3rem; color: var(--text-secondary); opacity: 0.3; margin-bottom: 1.5rem; display: block;"></i>
+        <h3>You haven't applied to any jobs yet</h3>
+        <p style="color: var(--text-secondary); margin-top: 0.5rem; margin-bottom: 1.5rem;">Explore matching jobs and start applying to launch your career!</p>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Find Matching Jobs</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Platform Admin Console | JobMatch AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1>Platform Admin <span>Console</span></h1>
+        <div style="display: flex; gap: 1rem;">
+            <a href="{{ url_for('admin_jobs') }}" class="btn" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border);">Moderate Jobs</a>
+            <a href="{{ url_for('admin_candidates') }}" class="btn" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border);">Registered Candidates</a>
+        </div>
+    </div>
+
+    <!-- Platform Stats Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+        <div class="glass-card" style="text-align: center; padding: 1.5rem;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Candidates</p>
+            <h2 style="font-size: 2.2rem; margin-top: 0.5rem; color: var(--primary);">{{ stats.total_candidates }}</h2>
+        </div>
+        <div class="glass-card" style="text-align: center; padding: 1.5rem;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Recruiters</p>
+            <h2 style="font-size: 2.2rem; margin-top: 0.5rem; color: #a855f7;">{{ stats.total_recruiters }}</h2>
+        </div>
+        <div class="glass-card" style="text-align: center; padding: 1.5rem;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Active Listings</p>
+            <h2 style="font-size: 2.2rem; margin-top: 0.5rem; color: var(--accent-success);">{{ stats.active_jobs }}</h2>
+        </div>
+        <div class="glass-card" style="text-align: center; padding: 1.5rem;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Total Applications</p>
+            <h2 style="font-size: 2.2rem; margin-top: 0.5rem; color: var(--secondary);">{{ stats.total_applications }}</h2>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+        <!-- Recruiter Directory & Approvals -->
+        <div class="glass-card" style="padding: 1.5rem; display: flex; flex-direction: column; gap: 2.5rem;">
+            
+            <!-- Section 1: Pending Approvals -->
+            <div>
+                <h3 style="margin-bottom: 1rem; color: var(--accent-warning); display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-clock"></i> Pending Recruiter Approvals ({{ pending_recruiters|length }})
+                </h3>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--glass-border); color: var(--text-secondary); font-size: 0.9rem;">
+                                <th style="padding: 1rem 0.5rem;">Recruiter</th>
+                                <th style="padding: 1rem 0.5rem;">Company</th>
+                                <th style="padding: 1rem 0.5rem; text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for recruiter in pending_recruiters %}
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem;">
+                                <td style="padding: 1rem 0.5rem;">
+                                    <span style="display: block; font-weight: 600;">{{ recruiter.profile.full_name or 'New Recruiter' }}</span>
+                                    <span style="font-size: 0.8rem; color: var(--text-secondary);">{{ recruiter.email }}</span>
+                                </td>
+                                <td style="padding: 1rem 0.5rem;">
+                                    <span style="font-weight: 500;">{{ recruiter.company_profile.company_name if recruiter.company_profile else 'N/A' }}</span>
+                                </td>
+                                <td style="padding: 1rem 0.5rem; text-align: right;">
+                                    <div style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                                        <a href="{{ url_for('admin_recruiter_profile', recruiter_id=recruiter.id) }}" class="btn" style="padding: 0.25rem 0.75rem; font-size: 0.8rem; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border); text-decoration: none;">View Profile</a>
+                                        <form action="{{ url_for('admin_approve_recruiter', recruiter_id=recruiter.id) }}" method="POST" style="display: inline;">
+                                            <button type="submit" class="btn" style="padding: 0.25rem 0.75rem; font-size: 0.8rem; background: var(--accent-success); color: #0f172a; border: none; font-weight: 600;">Approve</button>
+                                        </form>
+                                        <form action="{{ url_for('admin_delete_recruiter', recruiter_id=recruiter.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this recruiter account? This action is permanent.');">
+                                            <button type="submit" class="btn" style="padding: 0.25rem 0.75rem; font-size: 0.8rem; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444;">Remove</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" style="padding: 2rem; text-align: center; color: var(--text-secondary);">No pending recruiter requests.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Section 2: Approved Recruiters -->
+            <div>
+                <h3 style="margin-bottom: 1rem; color: var(--accent-success); display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-check-circle"></i> Approved Recruiters ({{ approved_recruiters|length }})
+                </h3>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid var(--glass-border); color: var(--text-secondary); font-size: 0.9rem;">
+                                <th style="padding: 1rem 0.5rem;">Recruiter</th>
+                                <th style="padding: 1rem 0.5rem;">Company</th>
+                                <th style="padding: 1rem 0.5rem; text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for recruiter in approved_recruiters %}
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem;">
+                                <td style="padding: 1rem 0.5rem;">
+                                    <span style="display: block; font-weight: 600;">{{ recruiter.profile.full_name or 'New Recruiter' }}</span>
+                                    <span style="font-size: 0.8rem; color: var(--text-secondary);">{{ recruiter.email }}</span>
+                                </td>
+                                <td style="padding: 1rem 0.5rem;">
+                                    <span style="font-weight: 500;">{{ recruiter.company_profile.company_name if recruiter.company_profile else 'N/A' }}</span>
+                                </td>
+                                <td style="padding: 1rem 0.5rem; text-align: right;">
+                                    <div style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                                        <a href="{{ url_for('admin_recruiter_profile', recruiter_id=recruiter.id) }}" class="btn" style="padding: 0.25rem 0.75rem; font-size: 0.8rem; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--glass-border); text-decoration: none;">View Profile</a>
+                                        <form action="{{ url_for('admin_disapprove_recruiter', recruiter_id=recruiter.id) }}" method="POST" style="display: inline;">
+                                            <button type="submit" class="btn" style="padding: 0.25rem 0.75rem; font-size: 0.8rem; background: rgba(245, 158, 11, 0.1); color: var(--accent-warning); border: 1px solid var(--accent-warning);">Revoke</button>
+                                        </form>
+                                        <form action="{{ url_for('admin_delete_recruiter', recruiter_id=recruiter.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this recruiter and all of their posted jobs/applications? This action is permanent.');">
+                                            <button type="submit" class="btn" style="padding: 0.25rem 0.75rem; font-size: 0.8rem; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444;">Remove</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" style="padding: 2rem; text-align: center; color: var(--text-secondary);">No approved recruiters found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Simulated Email Logs card -->
+        <div class="glass-card" style="padding: 1.5rem; height: 100%; display: flex; flex-direction: column;">
+            <h3 style="margin-bottom: 1.25rem; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 0.5px;">SMTP Email Logs</h3>
+            <div style="flex: 1; max-height: 400px; overflow-y: auto; padding-right: 0.25rem;">
+                {% for log in recent_emails %}
+                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); border-radius: 6px; padding: 0.75rem; margin-bottom: 0.75rem;">
+                    <p style="font-size: 0.8rem; margin: 0 0 0.25rem 0; color: var(--primary);">To: {{ log.recipient }}</p>
+                    <p style="font-weight: 600; font-size: 0.85rem; margin: 0 0 0.25rem 0;">{{ log.subject }}</p>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); white-space: pre-wrap; margin: 0;">{{ log.body }}</p>
+                    <span style="font-size: 0.7rem; color: var(--text-secondary); display: block; text-align: right; margin-top: 0.5rem;">{{ log.sent_at.strftime('%H:%M:%S') }}</span>
+                </div>
+                {% else %}
+                <p style="color: var(--text-secondary); font-size: 0.9rem; text-align: center;">No email logs generated yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

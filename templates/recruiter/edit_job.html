@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Job | JobMatch Admin{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px;">
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ url_for('recruiter_jobs') }}" style="color: var(--text-secondary); text-decoration: none;">&larr; Back to Jobs</a>
+        <h1 style="margin-top: 1rem;">Edit <span>Job Posting</span></h1>
+    </div>
+
+    <div class="glass-card">
+        <form action="{{ url_for('recruiter_edit_job', job_id=job.id) }}" method="POST">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="form-group">
+                    <label for="title">Job Title</label>
+                    <input type="text" id="title" name="title" value="{{ job.title }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="company">Company Name</label>
+                    <input type="text" id="company" name="company" value="{{ job.company }}" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Job Description</label>
+                <textarea id="description" name="description" rows="6" required>{{ job.description }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="skills_required">Required Skills (Comma separated)</label>
+                <input type="text" id="skills_required" name="skills_required" value="{{ job.skills_required }}" placeholder="e.g. Python, SQL, AWS" required>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" value="{{ job.location }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="salary">Salary Range</label>
+                    <input type="text" id="salary" name="salary" value="{{ job.salary }}">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
+                <div class="form-group">
+                    <label for="job_type">Job Category / Type</label>
+                    <select id="job_type" name="job_type" required>
+                        <option value="Full-time" {% if job.job_type == 'Full-time' %}selected{% endif %}>Full-time</option>
+                        <option value="Part-time" {% if job.job_type == 'Part-time' %}selected{% endif %}>Part-time</option>
+                        <option value="Contract" {% if job.job_type == 'Contract' %}selected{% endif %}>Contract</option>
+                        <option value="Internship" {% if job.job_type == 'Internship' %}selected{% endif %}>Internship</option>
+                        <option value="Remote" {% if job.job_type == 'Remote' %}selected{% endif %}>Remote</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="experience_level">Experience Level</label>
+                    <select id="experience_level" name="experience_level" required>
+                        <option value="Entry-level" {% if job.experience_level == 'Entry-level' %}selected{% endif %}>Entry-level</option>
+                        <option value="Junior" {% if job.experience_level == 'Junior' %}selected{% endif %}>Junior</option>
+                        <option value="Mid-level" {% if job.experience_level == 'Mid-level' %}selected{% endif %}>Mid-level</option>
+                        <option value="Senior" {% if job.experience_level == 'Senior' %}selected{% endif %}>Senior</option>
+                        <option value="Lead" {% if job.experience_level == 'Lead' %}selected{% endif %}>Lead</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="vacancies">Number of Vacancies</label>
+                    <input type="number" id="vacancies" name="vacancies" min="1" value="{{ job.vacancies }}" required style="width: 100%; height: 45px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 8px; color: white; padding: 0.5rem 1rem; outline: none; transition: 0.3s;">
+                </div>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
+                <input type="checkbox" id="is_active" name="is_active" {% if job.is_active %}checked{% endif %} style="width: auto;">
+                <label for="is_active" style="margin-bottom: 0;">Job is Active and visible to candidates</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 2rem; padding: 1rem;">Update Job Posting</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

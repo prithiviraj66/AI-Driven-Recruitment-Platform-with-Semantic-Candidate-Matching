@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Jobs | JobMatch Admin{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1000px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h1>Moderate Platform <span>Jobs</span></h1>
+    </div>
+
+    <div class="glass-card" style="padding: 0;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: rgba(255,255,255,0.05); border-bottom: 1px solid var(--glass-border);">
+                    <th style="padding: 1.5rem;">Job Title</th>
+                    <th style="padding: 1.5rem;">Company</th>
+                    <th style="padding: 1.5rem;">Location</th>
+                    <th style="padding: 1.5rem;">Status</th>
+                    <th style="padding: 1.5rem; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr style="border-bottom: 1px solid var(--glass-border); transition: 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                    <td style="padding: 1.25rem;">
+                        <span style="display: block; font-weight: 600;">{{ job.title }}</span>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Posted on {{ job.posted_at.strftime('%Y-%m-%d') }}</span>
+                    </td>
+                    <td style="padding: 1.25rem; color: var(--text-secondary);">{{ job.company }}</td>
+                    <td style="padding: 1.25rem; color: var(--text-secondary);">{{ job.location }}</td>
+                    <td style="padding: 1.25rem;">
+                        {% if job.is_active %}
+                        <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-success);">Active</span>
+                        {% else %}
+                        <span class="badge" style="background: rgba(245, 158, 11, 0.1); color: var(--accent-warning);">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 1.25rem; text-align: right;">
+                        <a href="{{ url_for('admin_delete_job', job_id=job.id) }}" style="color: #ef4444; text-decoration: none; font-weight: 500;" onclick="return confirm('Are you sure you want to delete this job listing?')">Moderate & Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

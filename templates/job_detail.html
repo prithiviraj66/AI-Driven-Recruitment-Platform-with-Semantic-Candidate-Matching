@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 900px;">
+    <div style="margin-bottom: 2rem;">
+        <a href="{{ url_for('dashboard') }}" style="color: var(--text-secondary); text-decoration: none;"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
+
+    <div class="glass-card">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
+            <div>
+                <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">{{ job.title }}</h1>
+                <p style="font-size: 1.25rem; color: var(--primary); font-weight: 700;">{{ job.company }}</p>
+                <div style="display: flex; gap: 1.5rem; margin-top: 1rem; color: var(--text-secondary);">
+                    <span><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+                    <span><i class="fas fa-money-bill-wave"></i> {{ job.salary or 'Competitive' }}</span>
+                    <span><i class="fas fa-calendar-alt"></i> Posted {{ job.posted_at.strftime('%b %d, %Y') }}</span>
+                </div>
+            </div>
+            <a href="{{ url_for('apply', job_id=job.id) }}" class="btn btn-primary" style="padding: 1rem 2rem; font-size: 1.1rem;">Quick Apply</a>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; margin-top: 3rem;">
+            <div>
+                <h3 style="margin-bottom: 1rem; font-size: 1.5rem;">Job Description</h3>
+                <div style="color: var(--text-secondary); white-space: pre-line; line-height: 1.8;">
+                    {{ job.description }}
+                </div>
+            </div>
+            
+            <div>
+                <div class="glass-card" style="padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);">
+                    <!-- Radial Gauge -->
+                    <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 2rem;">
+                        <div style="position: relative; width: 120px; height: 120px;">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring__background" stroke="rgba(255,255,255,0.05)" stroke-width="8" fill="transparent" r="50" cx="60" cy="60"/>
+                                <circle class="progress-ring__circle" stroke="url(#gradient)" stroke-width="8" stroke-dasharray="314.16" stroke-dashoffset="{{ 314.16 - (314.16 * score / 100) }}" stroke-linecap="round" fill="transparent" r="50" cx="60" cy="60"/>
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="var(--primary)"/>
+                                        <stop offset="100%" stop-color="var(--secondary)"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; font-weight: 800; color: white;">
+                                {{ score|round(0)|int }}%
+                            </div>
+                        </div>
+                        <div style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); font-weight: 500;">Match Rating</div>
+                    </div>
+
+                    <!-- Matched Skills -->
+                    <h4 style="color: var(--accent-success); margin-bottom: 0.75rem;"><i class="fas fa-check-circle"></i> Skills You Have ({{ matched_skills|length }})</h4>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem;">
+                        {% for skill in matched_skills %}
+                            <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-success); border: 1px solid var(--accent-success); text-transform: capitalize;">{{ skill }}</span>
+                        {% else %}
+                            <span style="font-size: 0.85rem; font-style: italic; color: var(--text-secondary);">No matching skills listed.</span>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Missing Skills -->
+                    <h4 style="color: var(--accent-warning); margin-bottom: 0.75rem;"><i class="fas fa-exclamation-triangle"></i> Skills Needed ({{ gap|length }})</h4>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        {% for skill in gap %}
+                            <span class="badge" style="background: rgba(245, 158, 11, 0.1); color: var(--accent-warning); border: 1px solid var(--accent-warning); text-transform: capitalize;">{{ skill }}</span>
+                        {% else %}
+                            <span class="badge" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-success); border: 1px solid var(--accent-success);">All Requirements Met!</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

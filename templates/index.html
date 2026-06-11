@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <h1>Your <span>Dream Job</span> is Just a Click Away.</h1>
+    <p>Our matching system connects your skills and experience with the most relevant opportunities from top companies.</p>
+    <div>
+        <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started Now</a>
+        <a href="{{ url_for('login') }}" class="btn" style="color: var(--text-primary); border: 1px solid var(--glass-border); padding: 0.7rem 1.4rem;">Browse Jobs</a>
+    </div>
+</div>
+
+</div>
+{% endblock %}
