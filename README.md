@@ -8,14 +8,14 @@ An AI-powered recruitment platform that intelligently matches candidates to job 
 
 | Home Page | Candidate Dashboard |
 
-| <img width="1916" height="1078" alt="Screenshot 2026-07-11 155901" src="https://github.com/user-attachments/assets/a7e7746e-f7de-4c7e-9eff-13c17a5d6f09" />|<img width="1917" height="1078" alt="Screenshot 2026-07-11 154709" src="https://github.com/user-attachments/assets/e2595f69-af31-4750-a897-5d06c3c1648f" />|
+ <img width="1916" height="1078" alt="Screenshot 2026-07-11 155901" src="https://github.com/user-attachments/assets/a7e7746e-f7de-4c7e-9eff-13c17a5d6f09" />
+ <img width="1917" height="1078" alt="Screenshot 2026-07-11 154709" src="https://github.com/user-attachments/assets/e2595f69-af31-4750-a897-5d06c3c1648f" />
 
 | Recruiter Dashboard |
-| <img width="1917" height="1078" alt="Screenshot 2026-07-11 154833" src="https://github.com/user-attachments/assets/04d3feab-9bd3-48b3-9af8-3fdc866458bc" />|
+ <img width="1917" height="1078" alt="Screenshot 2026-07-11 154833" src="https://github.com/user-attachments/assets/04d3feab-9bd3-48b3-9af8-3fdc866458bc" />
 
 | Admin Dashboard |
-| :---: | :---: |
-| <img width="1917" height="1075" alt="Screenshot 2026-07-11 154637" src="https://github.com/user-attachments/assets/053000b4-187f-4687-81b8-49a998544c4a" /> |
+<img width="1917" height="1075" alt="Screenshot 2026-07-11 154637" src="https://github.com/user-attachments/assets/053000b4-187f-4687-81b8-49a998544c4a" /> 
 
 
 ---
