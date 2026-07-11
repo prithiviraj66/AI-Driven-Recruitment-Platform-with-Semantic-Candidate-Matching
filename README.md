@@ -150,9 +150,4 @@ Add screenshots of:
 
 ---
 
-# 👨‍💻 Author
-
-**Prithiviraj S**
-
-AI & Machine Learning Enthusiast
 
