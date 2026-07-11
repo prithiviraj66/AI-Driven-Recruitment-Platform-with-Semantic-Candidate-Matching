@@ -7,11 +7,10 @@ An AI-powered recruitment platform that intelligently matches candidates to job 
 ##  Overview & Screenshots
 
 | Home Page | Candidate Dashboard |
-| :---: | :---: |
-| <img width="1916" height="1078" alt="Screenshot 2026-07-11 155901" src="https://github.com/user-attachments/assets/a7e7746e-f7de-4c7e-9eff-13c17a5d6f09" />||<img width="1917" height="1078" alt="Screenshot 2026-07-11 154709" src="https://github.com/user-attachments/assets/e2595f69-af31-4750-a897-5d06c3c1648f" />|
+
+| <img width="1916" height="1078" alt="Screenshot 2026-07-11 155901" src="https://github.com/user-attachments/assets/a7e7746e-f7de-4c7e-9eff-13c17a5d6f09" />|<img width="1917" height="1078" alt="Screenshot 2026-07-11 154709" src="https://github.com/user-attachments/assets/e2595f69-af31-4750-a897-5d06c3c1648f" />|
 
 | Recruiter Dashboard |
-| :---: | :---: |
 | <img width="1917" height="1078" alt="Screenshot 2026-07-11 154833" src="https://github.com/user-attachments/assets/04d3feab-9bd3-48b3-9af8-3fdc866458bc" />|
 
 | Admin Dashboard |
@@ -54,7 +53,7 @@ An AI-powered recruitment platform that intelligently matches candidates to job 
 
 ---
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 | Category | Technologies |
 | :--- | :--- |
@@ -68,7 +67,7 @@ An AI-powered recruitment platform that intelligently matches candidates to job 
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 AI-Driven-Recruitment-Platform-with-Semantic-Candidate-Matching/
@@ -91,7 +90,7 @@ AI-Driven-Recruitment-Platform-with-Semantic-Candidate-Matching/
 
 ---
 
-## ⚙️ Installation & Setup
+##  Installation & Setup
 
 ### 1. Clone the Repository
 ```bash
@@ -137,7 +136,7 @@ python main.py
 
 ---
 
-## 🔄 AI Matching Workflow
+##  AI Matching Workflow
 
 ```text
       ┌─────────────────────────┐
@@ -177,7 +176,7 @@ python main.py
 
 ---
 
-## 📦 Requirements
+##  Requirements
 
 * Python 3.10+
 * Flask
