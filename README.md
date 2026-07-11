@@ -126,17 +126,6 @@ Candidate Ranking
       ▼
 Recruiter Recommendation
 ```
-# 📸 Screenshots
-
-Add screenshots of:
-
-- Home Page
-- Candidate Dashboard
-- Recruiter Dashboard
-- Admin Dashboard
-- Job Posting Page
-- Candidate Ranking Results
-
 # 📦 Requirements
 
 - Python 3.10+
@@ -149,5 +138,15 @@ Add screenshots of:
 - PyPDF2
 
 ---
+# 📸 Screenshots
+
+- Home Page
+- Candidate Dashboard
+- Recruiter Dashboard
+- Admin Dashboard
+- Job Posting Page
+- Candidate Ranking Results
+
+
 
 
